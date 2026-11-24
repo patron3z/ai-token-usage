@@ -1,39 +1,37 @@
 # ai-token-usage
 
-An Agent Skill that answers "how many tokens did each task use?" for **Claude Code, Codex and OpenCode**, and a small script that puts a title next to each Claude Code session.
+An Agent Skill that answers "how many tokens did each task use?" in **Claude Code, Codex and OpenCode**.
 
-It does the counting with [ccusage](https://github.com/ccusage/ccusage) (MIT, by ryoppippi and contributors), which it runs as a separate program. This repository contains none of ccusage's code and is not affiliated with it. Everything runs on your computer and nothing is uploaded by this skill.
+- **Claude Code:** `skills/token-usage/scripts/usage.py`, my own small script (Python 3, standard library only). It reads Claude Code's local log files and shows tokens per session (with the conversation's title), day or month.
+- **Codex and OpenCode:** the skill tells the agent to run [ccusage](https://github.com/ccusage/ccusage) (MIT, by ryoppippi and contributors), a separate program. This repository contains none of its code and is not affiliated with it.
 
-## What you get
+Everything runs on your computer and nothing is uploaded. Tokens are exact counts from the logs. The script shows no cost unless you give it your own prices.
 
-- `skills/token-usage/SKILL.md`: tells the agent which ccusage command to run for each agent, and how to report the result.
-- `skills/token-usage/scripts/session_titles.py`: lists your heaviest Claude Code sessions with their titles and dates (Python 3, standard library only).
+## Check it
 
-Costs are estimates at API prices, not what a subscription plan charges.
+On the author's logs, month totals match ccusage's to the token (August to October compared; November was still growing while measured).
 
 ## Install
 
-1. Install ccusage (Node.js needed), or use `npx ccusage` instead:
+Copy `skills/token-usage/` to your agent's skills folder:
+
+| Agent | Folder |
+|---|---|
+| Claude Code | `~/.claude/skills/token-usage` |
+| Codex | `~/.agents/skills/token-usage` |
+| OpenCode | `~/.config/opencode/skills/token-usage` |
+
+Then ask your agent: "how many tokens did each of my sessions use?" Or run the script yourself:
 
 ```bash
-npm install -g ccusage
-ccusage telemetry disable   # optional: ccusage sends a small anonymous ping by default
+python skills/token-usage/scripts/usage.py --top 10
+python skills/token-usage/scripts/usage.py --by month
 ```
-
-2. Copy `skills/token-usage/` to your agent's skills folder:
-
-| Agent | Folder | Report command |
-|---|---|---|
-| Claude Code | `~/.claude/skills/token-usage` | `ccusage session` |
-| Codex | `~/.agents/skills/token-usage` | `ccusage codex session` |
-| OpenCode | `~/.config/opencode/skills/token-usage` | `ccusage opencode session` |
-
-Then ask your agent: "how many tokens did each of my sessions use?"
 
 ## Status
 
-Tested with Claude Code on Windows. Not yet run inside Codex or OpenCode (neither is installed on the author's PC): their folders and commands come from ccusage's own documentation. If something differs on your machine, open an issue.
+Tested on Windows with Claude Code. The Codex and OpenCode parts are untested here (neither is installed on the author's PC): their folders and ccusage commands come from ccusage's documentation. If something differs on your machine, open an issue.
 
 ## License
 
-MIT, see `LICENSE`. ccusage has its own MIT license.
+MIT, see `LICENSE`.
